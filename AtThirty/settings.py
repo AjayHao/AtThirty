@@ -106,11 +106,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 #设置STATIC_URL为存储静态文件的路径（基于根目录）
-STATIC_URL = '/static/' 
-#发布生产可能会用
-#STATIC_ROOT = 'src/../../static'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join( BASE_DIR, 'static' )
+GLOBAL_CSS_DIR = os.path.join( STATIC_ROOT,'css' )
+GLOBAL_IMG_DIR = os.path.join( STATIC_ROOT,'img' )
+GLOBAL_FONT_DIR = os.path.join( STATIC_ROOT,'font' )
+GLOBAL_JS_DIR = os.path.join( STATIC_ROOT,'js/' )
+
 #配置存储静态文件的路径映射值，这个值用于模版引用路径的转换
-STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, "static"), 
-        
-)  
+# STATICFILES_DIRS = (
+#         os.path.join(BASE_DIR, "static"),         
+# )  

@@ -15,9 +15,25 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
 from app.sysAdmin import views as adminViews
+import os
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', adminViews.index, name='index'),
+    url(r'^$', adminViews.index, name='index'),   
+    url(r'^dashboard/', adminViews.index, name='index'),         
+    url(r'^reports/', adminViews.reports, name='reports'),
+    url(r'^guides/', adminViews.guides, name='guides'),
+    url(r'^charts/', adminViews.charts, name='charts'),
+    url(r'^shortcodes/', adminViews.charts, name='shortcodes'),    
+    url(r'^css/(?P<path>.*)$' , 'django.views.static.serve', 
+         {'document_root': settings.GLOBAL_CSS_DIR} ) ,
+    url(r'^js/(?P<path>.*)$' , 'django.views.static.serve', 
+         {'document_root':  settings.GLOBAL_JS_DIR} ) ,
+    url(r'^img/(?P<path>.*)$' , 'django.views.static.serve', 
+         {'document_root':  settings.GLOBAL_IMG_DIR} ) ,
+    url(r'^font/(?P<path>.*)$' , 'django.views.static.serve', 
+         {'document_root':  settings.GLOBAL_FONT_DIR} ) ,
+               
 ]
