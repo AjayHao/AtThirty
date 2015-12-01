@@ -17,3 +17,6 @@ def charts(req):
 
 def shortcodes(req):
     return render_to_response('shortcodes.html')
+
+def schedules(req):
+    return render_to_response('schedules.html')
