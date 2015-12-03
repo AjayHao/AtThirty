@@ -27,7 +27,9 @@ urlpatterns = [
     url(r'^guides/', adminViews.guides, name='guides'),
     url(r'^charts/', adminViews.charts, name='charts'),
     url(r'^shortcodes/', adminViews.shortcodes, name='shortcodes'), 
-    url(r'^schedules/', adminViews.schedules, name='schedules'),     
+    url(r'^schedules/', adminViews.schedules, name='schedules'),
+    url(r'^get_sche_events/$',adminViews.get_sche_events),
+    
     url(r'^css/(?P<path>.*)$' , 'django.views.static.serve', 
          {'document_root': settings.GLOBAL_CSS_DIR} ) ,
     url(r'^js/(?P<path>.*)$' , 'django.views.static.serve', 
