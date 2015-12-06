@@ -16,27 +16,30 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
-from app.sysAdmin import views as adminViews
 import os
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', adminViews.index, name='index'),   
-    url(r'^dashboard/', adminViews.index, name='index'),         
-    url(r'^reports/', adminViews.reports, name='reports'),
-    url(r'^guides/', adminViews.guides, name='guides'),
-    url(r'^charts/', adminViews.charts, name='charts'),
-    url(r'^shortcodes/', adminViews.shortcodes, name='shortcodes'), 
-    url(r'^schedules/', adminViews.schedules, name='schedules'),
-    url(r'^get_sche_events/$',adminViews.get_sche_events),
+####this line don't delete!!!
+#url(r'^admin/', include(admin.site.urls)),
     
-    url(r'^css/(?P<path>.*)$' , 'django.views.static.serve', 
-         {'document_root': settings.GLOBAL_CSS_DIR} ) ,
-    url(r'^js/(?P<path>.*)$' , 'django.views.static.serve', 
-         {'document_root':  settings.GLOBAL_JS_DIR} ) ,
-    url(r'^img/(?P<path>.*)$' , 'django.views.static.serve', 
-         {'document_root':  settings.GLOBAL_IMG_DIR} ) ,
-    url(r'^font/(?P<path>.*)$' , 'django.views.static.serve', 
-         {'document_root':  settings.GLOBAL_FONT_DIR} ) ,
+#    url(r'^$', adminViews.index, name='index'),   
+    url(r'^', include('app.blog.urls')),    
+    url(r'^blog_admin/', include('app.sysAdmin.urls')),    
+    #url(r'^dashboard/', adminViews.index, name='index'),         
+    #url(r'^reports/', adminViews.reports, name='reports'),
+    #url(r'^guides/', adminViews.guides, name='guides'),
+    #url(r'^charts/', adminViews.charts, name='charts'),
+    #url(r'^shortcodes/', adminViews.shortcodes, name='shortcodes'), 
+    #url(r'^schedules/', adminViews.schedules, name='schedules'),
+    #url(r'^get_sche_events/$',adminViews.get_sche_events),
+    
+    #url(r'^css/(?P<path>.*)$' , 'django.views.static.serve', 
+    #     {'document_root': settings.GLOBAL_CSS_DIR} ) ,
+    #url(r'^js/(?P<path>.*)$' , 'django.views.static.serve', 
+    #     {'document_root':  settings.GLOBAL_JS_DIR} ) ,
+    #url(r'^img/(?P<path>.*)$' , 'django.views.static.serve', 
+    #     {'document_root':  settings.GLOBAL_IMG_DIR} ) ,
+    #url(r'^font/(?P<path>.*)$' , 'django.views.static.serve', 
+    #     {'document_root':  settings.GLOBAL_FONT_DIR} ) ,
                
 ]

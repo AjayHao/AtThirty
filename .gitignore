@@ -5,3 +5,4 @@
 *.sqlite3
 .DS_Store
 .settings/org.eclipse.core.resources.prefs
+test.py

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
-from app.sysAdmin.models import Sche 
+from app.sysAdmin.models import Sche
 import json
 # Create your views here.
 # @ensure_csrf_cookie
 def index(req):
-    return render_to_response('admin_index.html',{"blog_subtitle":"控制台"})
+    return render_to_response('blog_index.html')
 
 def reports(req):
     return render_to_response('reports.html',{"blog_subtitle":"报表"})
