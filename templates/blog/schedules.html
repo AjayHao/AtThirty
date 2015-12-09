@@ -42,25 +42,19 @@
     <div class="container">
 
         <div class="row">
-            <h1 class="page-header">
-                	投资日记
-                <small>Secondary Text</small>
-            </h1>
-
-            <!-- /widget -->
-            <div class="widget widget-nopad">
-                <div class="widget-header"> <i class="glyphicon glyphicon-list-alt"></i>
-                     <h3> Recent News</h3>
-                </div>
-                <!-- /widget-header -->
-                <div id="scheduler" class="widget-content">
-                    <div id="script-warning">	<code>获取日程信息失败</code>
-                    </div>
-                    <div id="loading">加载中，请稍后..</div>
-                    <div id="calendar"></div>
-                </div>
-                <!-- /widget-content -->
-            </div>
+	        <div class="col-md-10">	
+	            <!-- /widget -->
+	            <div class="widget widget-nopad">
+	                <div id="scheduler" class="widget-content">
+	                    <div id="script-warning">
+	                    	<code>获取日程信息失败</code>
+	                    </div>
+	                    <div id="loading">加载中，请稍后..</div>
+	                    <div id="calendar"></div>
+	                </div>
+	                <!-- /widget-content -->
+	            </div>
+        	</div>
             <!-- /widget -->
 		</div>  
 		 <!-- /.row -->     
@@ -103,12 +97,13 @@
             calendar.fullCalendar('unselect');
           },
           editable: true,
-          events: {
+          /*events: {
         	  url : '/get_sche_events',
         	  error : function() {
         		  $('#script-warning').show();
         	  }
-          },
+          },*/
+          events: '/get_sche_events',
           loading: function(bool) {
 			  $('#loading').toggle(bool);
 		  }	  
