@@ -6,6 +6,6 @@ from app.blog import views as blog_views
 urlpatterns = [
     #django url
     url(r'^$', blog_views.index, name='blog_index'),
-    url(r'^schedules$', blog_views.schedules, name='schedules'),   
-    url(r'^get_sche_events/$',blog_views.get_sche_events),     
+    url(r'^notes$', blog_views.notes, name='notes'),   
+    url(r'^get_notes/$',blog_views.get_notes),     
 ]

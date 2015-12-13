@@ -6,3 +6,6 @@
 .DS_Store
 .settings/org.eclipse.core.resources.prefs
 test.py
+static/css/bootstrap.css
+static/css/bootstrap-theme.css
+static/js/bootstrap.js

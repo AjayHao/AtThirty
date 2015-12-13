@@ -1,0 +1,70 @@
+
+/*fc event item*/
+.notes{
+	color : #000;
+	border-color: #000;
+	background-color : #fff;
+}
+
+.memo_color{
+	border-color : #2e6da4;
+    background-color: #428bca;
+	color : #fff;
+}
+
+.invest_color{
+	border-color : #4cae4c;
+    background-color: #5cb85c;
+	color : #fff;    
+}
+
+.account_color{
+	border-color : #d58512;
+    background-color: #ec971f;
+	color : #fff;
+}
+
+
+
+/* btn */
+.btn-outline {
+    color: inherit;
+    background-color: transparent;
+    transition: all .5s;
+}
+/* 
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.428571429;
+}
+
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    border-radius: 25px;
+    font-size: 18px;
+    line-height: 1.33;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+} */
+
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: #fff;
+}

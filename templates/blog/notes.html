@@ -1,0 +1,221 @@
+{% extends "blog_base.html" %}
+{% block custom_style %}
+<link rel='stylesheet' href='/static/css/jquery-ui.min.css' />
+<link rel="stylesheet" href="/static/css/fullcalendar.min.css"  />
+<link rel="stylesheet" href="/static/css/notes.css" />
+<style>
+#scheduler {
+	margin: 0;
+	padding: 0;
+	font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+#script-warning {
+	display: none;
+	background: #eee;
+	border-bottom: 1px solid #ddd;
+	padding: 0 10px;
+	line-height: 40px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 12px;
+	color: red;
+}
+
+#loading {
+	display: none;
+	position: absolute;
+	top: 10px;
+	right: 20px;
+}
+
+/* #calendar {
+	max-width: 900px;
+	margin: 20px auto;
+	padding: 0 10px;
+} */
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="container">
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i></i>笔记
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-8">
+							<div id="scheduler" class="widget-content">
+								<div id="script-warning">
+									<code>获取笔记信息失败</code>
+								</div>
+								<div id="loading">加载中..</div>
+								<div id="calendar"></div>
+							</div>
+						</div>
+						<!-- /col -->
+						<div class="col-lg-4">
+							<div class="panel">
+                                <header class="panel-heading">
+                                    <button id="memo" type="button" class="btn notes memo_color">
+                                    	<i class="fa fa-list">
+                                    		备忘录
+                                    	</i>
+		                            </button>
+		                            <button id="invest" type="button" class="btn notes invest_color">
+		                            	<i class="fa fa-link">
+		                            		投资
+		                            	</i>
+		                            </button>
+		                            <button id="account" type="button" class="btn notes account_color">
+		                            	<i class="fa fa-check">
+		                            		记账
+		                            	</i>
+		                            </button>   
+                                </header>
+                                <div class="panel-body">                         
+                                    <table class="table table-striped">
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Task</th>
+                                            <th style="width: 40px">Label</th>
+                                        </tr>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>Update software</td>
+                                            <td><span class="badge bg-red">55%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.</td>
+                                            <td>Clean database</td>
+                                            <td><span class="badge bg-yellow">70%</span></td>
+                                        </tr>
+                                    </table>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+						</div>
+						<!-- /col -->
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /panel-body -->
+			</div>
+			<!-- /panel -->
+		</div>
+		<!-- /col -->
+	</div>
+	<!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock %} 
+
+{% block custom_js %}
+<script type="text/javascript" src="/static/js/moment.min.js"></script>
+<script type="text/javascript" src="/static/js/fullcalendar.min.js"></script>
+<script type="text/javascript" src="/static/js/lang-all.js"></script>
+<script>
+	$(document).ready(function() {
+		//var date = new Date();
+		//var d = date.getDate();
+		//var m = date.getMonth();
+		//var y = date.getFullYear();
+		renderCalendar();
+	});
+	
+	$(".notes").click(function(){
+		$(this).toggleClass(this.id+"_color");
+		var arr = [];
+		$(".notes").filter(function(){
+			return $(this).hasClass(this.id+"_color");
+		}).each(function(){
+			if(this.id=='memo'){
+				arr.push(1);
+			}else if(this.id=='invest'){
+				arr.push(2);
+			}else if(this.id=='account'){
+				arr.push(3);
+			}
+		});
+		$('#calendar').fullCalendar('destroy');
+		renderCalendar({"note_type":arr});
+	});
+	
+	
+	function renderCalendar(paraData){
+		$('#calendar').fullCalendar({
+			theme : true,
+			header : {
+				left : 'prev,next today',
+				center : 'title',
+				right : 'month,agendaWeek,agendaDay'
+			},
+			lang : 'zh-cn',
+			selectable : true,
+			selectHelper : true,
+			select : function(start, end, allDay) {
+				var title = prompt('Event Title:');
+				if (title) {
+					calendar.fullCalendar('renderEvent', {
+						title : title,
+						start : start,
+						end : end,
+						allDay : allDay
+					}, true // make the event "stick"
+					);
+				}
+				calendar.fullCalendar('unselect');
+			},
+			editable : true,
+			events : {
+				url : '/get_notes',
+				type : 'GET',
+				data : paraData || [],
+				error : function() {
+					$('#script-warning').show();
+				}
+			},
+			loading : function(bool) {
+				//$('#loading').toggle(bool);
+			},
+			eventRender: function(event, element, view) {
+				// render the timezone offset below the event title
+				/*if (event.start.hasZone()) {
+					element.find('.fc-title').after(
+						$('<div class="tzo"/>').text(event.start.format('Z'))
+					);*/
+				alert(view.name);
+				if (event.note_type == '1'){
+					event['className'] = 'memo_color';
+				}else if (event.note_type == '2'){
+					event['className'] = 'invest_color';
+				}else if (event.note_type == '3'){ 
+					event['className'] = 'account_color';
+				}
+				element.addClass(event['className']);
+			},
+		    eventClick: function(calEvent, jsEvent, view) {
+
+		        alert('Event: ' + calEvent.title);
+		        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+		        alert('View: ' + view.name);
+
+		        // change the border color just for fun
+		        alert($(this).html());
+
+		    },
+		    viewRender: function(view, element){
+		    	//alert(view.start.format());
+		    	//alert(view.end.format());	
+		    }
+		});
+	}
+
+	
+</script>
+<!-- /Calendar -->
+{% endblock %}
