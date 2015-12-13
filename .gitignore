@@ -8,7 +8,6 @@
 test.py
 static/css/bootstrap.css
 static/css/bootstrap-theme.css
-static/css/fullcalendar.css
 static/js/bootstrap.js
-static/js/fullcalendar.js
-
+static/blog/css/fullcalendar.css
+static/blog/js/fullcalendar.js
