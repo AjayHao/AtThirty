@@ -11,3 +11,5 @@ static/css/bootstrap-theme.css
 static/js/bootstrap.js
 static/blog/css/fullcalendar.css
 static/blog/js/fullcalendar.js
+static/sysAdmin/css/font-awesome.css
+static/js/angular.js

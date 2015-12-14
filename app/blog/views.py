@@ -21,12 +21,9 @@ def get_notes(req):
     
     evnts = Notes.objects.exclude(
                 Q(begin_date__gte=qEnd) | Q(end_date__lt=qBegin)
-            )
-    
-    if  len(qNoteType) > 0 :
-        evnts = evnts.filter(
-            note_type__in=qNoteType
-        )  
+            ).filter(
+                note_type__in=qNoteType
+            )  
         
     #print(evnts)
     #ret = evnts.values()
@@ -34,8 +31,10 @@ def get_notes(req):
     now I just bet that python solves more efficiently then what js does..
     '''
     ret = []   
+    #for i in range(len(evnts)):
     for e in evnts:
         d = {}
+        #d['row_num'] = i
         d['note_id'] = e.id
         d['title'] = e.title
         d['start'] = e.begin_date
@@ -60,5 +59,5 @@ def get_notes(req):
         '''
         ret.append(d)
 
-    print(ret)    
+    #print(ret)    
     return HttpResponse(json.dumps(ret), content_type="application/json")

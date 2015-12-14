@@ -12,7 +12,7 @@ class BaseModel(models.Model):
 class Notes(BaseModel):
     
     NOTE_TYPES = (
-        ('1', '备忘'),
+        ('1', '备忘录'),
         ('2', '投资'),
         ('3', '记账'),
     )

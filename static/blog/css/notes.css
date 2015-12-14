@@ -1,5 +1,9 @@
 
 /*fc event item*/
+.fc table{
+	font-size : 1.1em;
+}
+
 .notes{
 	color : #000;
 	border-color: #000;
@@ -24,15 +28,22 @@
 	color : #fff;
 }
 
+.smpad{
+	padding : 3px;
+}
 
+.remark_line{
+	line-height: 1.5em;
+	padding-left: 3em;
+}
 
 /* btn */
-.btn-outline {
+/*.btn-outline {
     color: inherit;
     background-color: transparent;
     transition: all .5s;
 }
-/* 
+ 
 .btn-circle {
     width: 30px;
     height: 30px;
@@ -59,7 +70,7 @@
     border-radius: 35px;
     font-size: 24px;
     line-height: 1.33;
-} */
+} 
 
 .btn-primary.btn-outline:hover,
 .btn-success.btn-outline:hover,
@@ -67,4 +78,4 @@
 .btn-warning.btn-outline:hover,
 .btn-danger.btn-outline:hover {
     color: #fff;
-}
+}*/
