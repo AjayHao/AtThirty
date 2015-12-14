@@ -136,34 +136,13 @@
 			//var m = date.getMonth();
 			//var y = date.getFullYear();
 			var $cal = $('#calendar');
-			renderCalendar($cal,{
-				"note_type" : [ 1, 2, 3 ]
-			});
 			
 			$(".notes").click(function() {
 				$(this).toggleClass(this.id + "_color");
-				var arr = [];
-				$(".notes").filter(function() {
-					return $(this).hasClass(this.id + "_color");
-				}).each(function() {
-					if (this.id == 'memo') {
-						arr.push(1);
-					} else if (this.id == 'invest') {
-						arr.push(2);
-					} else if (this.id == 'account') {
-						arr.push(3);
-					}
-				});
-				$cal.fullCalendar('destroy');
-				renderCalendar($cal,
-					{ "note_type" : arr}
-				);
+				$cal.fullCalendar('refetchEvents');
 			});
-		});
-		
-		function renderCalendar($calendar, paraData) {		
-			var __this = this;
-			$calendar.fullCalendar({
+			
+			$cal.fullCalendar({
 				theme : true,
 				header : {
 					left : 'prev,next today',
@@ -176,21 +155,22 @@
 				select : function(start, end, allDay) {
 					var title = prompt('Event Title:');
 					if (title) {
-						calendar.fullCalendar('renderEvent', {
+						$cal.fullCalendar('renderEvent', {
 							title : title,
 							start : start,
 							end : end,
 							allDay : allDay
-						}, true // make the event "stick"
+						}, false // true will make the event "stick"
 						);
 					}
-					calendar.fullCalendar('unselect');
+					$cal.fullCalendar('unselect');
 				},
-				editable : true,
+				editable : false,  //close dragging function
 				events : {
 					url : '/get_notes',
 					type : 'GET',
-					data : paraData || [],
+					//data : paraData || [],
+					data : getParamJson,
 					error : function() {
 						$('#script-warning').show();
 					}
@@ -199,7 +179,7 @@
 					//$('#loading').toggle(bool);
 					if(!isLoading){
 						//!!!
-						$scope.obj.notes  = $calendar.fullCalendar('clientEvents');
+						$scope.obj.notes  = $cal.fullCalendar('clientEvents');
 						$scope.$digest();
 					}
 				},
@@ -218,10 +198,11 @@
 				viewRender : function(view, element) {
 					//alert(view.start.format());
 					//alert(view.end.format());	
+					$cal.fullCalendar('refetchEvents');
 				}
 			});
-	
-		}
+		});
+		
 	});
 </script>
 <!-- /Calendar -->

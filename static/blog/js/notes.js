@@ -13,6 +13,7 @@ function renderWithNotesType(event, element, view) {
 	
 	event['colorClassName'] = colorclass;
 	
+	
 	element.addClass(colorclass)
 				.find('.fc-title')
 					.html(renderNotesHtml(event,view));
@@ -46,5 +47,20 @@ function renderNotesHtml(event,view){
 	return _html;
 }
 
+function getParamJson(){
+	var arr = [];
+	$(".notes").filter(function() {
+		return $(this).hasClass(this.id + "_color");
+	}).each(function() {
+		if (this.id == 'memo') {
+			arr.push(1);
+		} else if (this.id == 'invest') {
+			arr.push(2);
+		} else if (this.id == 'account') {
+			arr.push(3);
+		}
+	});
+	return {"note_type": arr}
+}
 
 
