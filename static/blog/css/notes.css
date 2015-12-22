@@ -11,15 +11,15 @@
 }
 
 .memo_color{
-	border-color : #2e6da4;
-    background-color: #428bca;
-	color : #fff;
-}
-
-.invest_color{
 	border-color : #4cae4c;
     background-color: #5cb85c;
 	color : #fff;    
+}
+
+.invest_color{
+	border-color : #e87352;
+    background-color: #ee2711;
+	color : #fff;
 }
 
 .account_color{
@@ -30,6 +30,10 @@
 
 .smpad{
 	padding : 3px;
+}
+
+.mdpad{
+	padding : 5px;
 }
 
 .remark_line{

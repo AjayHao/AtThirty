@@ -121,7 +121,7 @@
 	<!-- /.row -->
 
 	<script type="text/ng-template" id="notes_modal.html">
-
+	<!--
 	<div class="modal-content" ng-show="noteSel.note_type==2">
       <div class="modal-header invest_color">
             <h3 class="modal-title">
@@ -141,32 +141,42 @@
             <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
         </div>
 	</div>
+	-->
 
-	<div class="modal-content" ng-show="noteSel.note_type==1">
-        <div class="modal-header memo_color">
+	<div class="modal-content" ng-show="noteSel">
+        <div class="modal-header {{noteSel.colorClassName}}">
             <h3 class="modal-title">
-				<i class="fa fa-calendar"></i>{{noteSel.note_type_name}}
+				<i class="fa fa-calendar">
+					<span class="mdpad">{{noteSel.note_type_name}}</span>
+				</i>
 			</h3>
         </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="note_title" class="control-label">标题:</label>
-            <input id="note_title" type="text" class="form-control"
-				value="{{noteSel.title}}" />
-          </div>
-          <div class="form-group">
-            <label for="remark" class="control-label">备注:</label>
-            <textarea id="remark" class="form-control" rows="6">{{noteSel.remark}}</textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="ok()">提交</button>
-        <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-      </div>
+		<!-- /modal-header -->
+      	<div class="modal-body">
+			<form>
+				<div class="form-group">
+					<label for="note_title" class="control-label">标题:</label>
+					<input id="note_title" type="text" class="form-control" ng-model="note_title" />
+				</div>
+				<div class="form-group">
+					<label for="remark" class="control-label">备注:</label>
+					<textarea id="remark" class="form-control" rows="6" ng-model="remark"></textarea>
+				</div>
+			</form>
+      	</div>
+		<!-- /modal-body -->
+      	<div class="modal-footer">
+			<div class="col-md-4 {{retObj.className}}">
+      			<strong>{{retObj.msg}}</strong>
+    		</div>
+			<div class="col-md-4 col-md-offset-4">
+        		<button type="button" id="okBtn" class="btn btn-primary"  data-loading-text="处理中.." ng-click="ok()">确定</button>
+        		<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+			</div>
+      	</div>
+		<!-- /modal-footer -->
 	</div>
-
+	<!-- /modal-content -->
     </script>
 </div>
 <!-- /.container -->
@@ -180,27 +190,27 @@
 	var blogApp = angular.module("blogApp", [ 'ui.bootstrap' ]);
 
 	blogApp.controller("noteController", function(
-			$scope, 
-			$document, 
-			$uibModal,
-			$log) {
+												$scope, 
+												$document, 
+												$uibModal) {
 		$scope.obj = new Object();
 		$scope.obj.notes = [];
 		$scope.pageTitle = '速记';
-
+		$scope.calendar = {};
+		
 		$document.ready(function() {
 			//var date = new Date();
 			//var d = date.getDate();
 			//var m = date.getMonth();
 			//var y = date.getFullYear();
-			var $cal = $('#calendar');
+			$scope.calendar = $('#calendar');
 
 			$(".notes").click(function() {
 				$(this).toggleClass(this.id + "_color");
-				$cal.fullCalendar('refetchEvents');
+				$scope.calendar.fullCalendar('refetchEvents');
 			});
 
-			$cal.fullCalendar({
+			$scope.calendar.fullCalendar({
 						theme : true,
 						header : {
 							left : 'prev,next today',
@@ -213,7 +223,7 @@
 						select : function(start, end, allDay) {
 							var title = prompt('Event Title:');
 							if (title) {
-								$cal.fullCalendar('renderEvent', {
+								$scope.calendar.fullCalendar('renderEvent', {
 									title : title,
 									start : start,
 									end : end,
@@ -221,11 +231,11 @@
 								}, false // true will make the event "stick"
 								);
 							}
-							$cal.fullCalendar('unselect');
+							$scope.calendar.fullCalendar('unselect');
 						},
 						editable : false, //close dragging function
 						events : {
-							url : '/get_notes',
+							url : '/get_notes/',
 							type : 'GET',
 							//data : paraData || [],
 							data : getParamJson,
@@ -238,7 +248,7 @@
 							if (!isLoading) {
 								//!!!
 								$scope.$apply(function(){
-									$scope.obj.notes = $cal.fullCalendar('clientEvents');	
+									$scope.obj.notes = $scope.calendar.fullCalendar('clientEvents');	
 								});
 							}
 						},
@@ -258,7 +268,7 @@
 						viewRender : function(view, element) {
 							//alert(view.start.format());
 							//alert(view.end.format());	
-							$cal.fullCalendar('refetchEvents');
+							$scope.calendar.fullCalendar('refetchEvents');
 						}
 					});
 		});
@@ -266,15 +276,7 @@
 		$scope.remove = function(idx) {
 			alert('note id to delete:' + $scope.obj.notes[idx].note_id);
 		};
-
-		/* $scope.edit = function(idx) {
-			alert('note id to edit:' + $scope.obj.notes[idx].note_id);
-		}; */
-
 		
-		
-		$scope.items = [ 'item1', 'item2', 'item3' ];
-
 		$scope.animationsEnabled = true;
 
 		$scope.edit = function(idx) {
@@ -283,27 +285,28 @@
 				animation : $scope.animationsEnabled,
 				templateUrl : 'notes_modal.html',
 				controller : 'ModalInstanceCtrl',
-				size : 200,
+				size : 'modal-md',
 				resolve : {
-					items : function() {
-						return $scope.items;
+					calendar : function(){
+						return $scope.calendar;
 					},
 					noteSel : function(){
-						//alert($scope.noteSel.note_type);
 						return $scope.noteSel;
 					}
-				}
+				}/* ,
+				close : function(noteSel){
+					$scope.$apply(function(){
+						$scope.obj.notes[idx] = noteSel;
+					});
+				} */
 			});
 
-			modalInstance.result.then(function(selectedItem) {
-				$scope.selected = selectedItem;
+			modalInstance.result.then(function() {
+				// here run after modal close
 			}, function() {
-				$log.info('Modal dismissed at: ' + new Date());
+				//$log.info('Modal dismissed at: ' + new Date());
+				alert('Modal dismissed at: ' + new Date());
 			});
-		};
-
-		$scope.toggleAnimation = function() {
-			$scope.animationsEnabled = !$scope.animationsEnabled;
 		};
 
 	});
@@ -312,17 +315,39 @@
 	// It is not the same as the $uibModal service used above.
 
 	angular.module('ui.bootstrap').controller('ModalInstanceCtrl',
-			function($scope, $uibModalInstance, items, noteSel) {
+			function($scope, $http, $uibModalInstance, calendar, noteSel) {
 
-				$scope.items = items;
 				$scope.noteSel = noteSel;
-				
-				$scope.selected = {
-					item : $scope.items[0]
-				};
+				$scope.note_title = noteSel.title;
+				$scope.remark = noteSel.remark;
+				$scope.retObj = {};
 
 				$scope.ok = function() {
-					$uibModalInstance.close($scope.selected.item);
+					var reqData = { 'note_id' : $scope.noteSel.note_id,
+									'note_title': $scope.note_title,
+								    'remark': $scope.remark  };
+					var $btn = $("#okBtn").button('loading');
+					
+					$http.post( '/change_note/',reqData)
+						.then(function successCallback(response) {
+							    // this callback will be called asynchronously
+							    // when the response is available
+		    			$scope.retObj.msg = response.retMsg;
+			    		if(response.retCode == "0"){
+			    			$scope.retObj.className = 'bg-success';
+			    		}else{
+			    			$scope.retObj.className = 'bg-danger';
+			    		}
+			    		calendar.fullCalendar('refetchEvents');
+			    		$btn.button('reset');
+			    		
+			    		$uibModalInstance.close(noteSel);
+					}, function errorCallback(response) {
+					  // called asynchronously if an error occurs
+					  // or server returns response with an error status.
+						
+					});
+					
 				};
 
 				$scope.cancel = function() {

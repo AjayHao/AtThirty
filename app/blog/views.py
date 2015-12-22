@@ -3,10 +3,12 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.db.models import Q
 from app.blog.models import *
+from django.views.decorators.csrf import csrf_exempt
 import json
-from _mysql import NULL
+
 # Create your views here.
-# @ensure_csrf_cookie
+# #@#ensure_csrf_cookie
+@csrf_exempt
 def index(req):
     return render_to_response('blog_index.html')
 
@@ -14,7 +16,6 @@ def notes(req):
     return render_to_response('notes.html')
 
 def get_notes(req):
-    
     qBegin = req.GET['start']
     qEnd = req.GET['end'] 
     qNoteType = req.GET.getlist('note_type[]')
@@ -60,4 +61,22 @@ def get_notes(req):
         ret.append(d)
 
     #print(ret)    
+    return HttpResponse(json.dumps(ret), content_type="application/json")
+
+def change_note(req):
+
+    ret = {'retCode':'0', 'retMsg':'修改成功'}
+    try:
+        if req.method == 'POST':
+            req_json = json.loads(req.body.decode())
+            note_id = req_json['note_id']
+            title = req_json['note_title']
+            remark = req_json['remark'] 
+    except Exception as e:
+        print(e)
+        ret['retMsg'] = e
+    note = Notes.objects.get(id=note_id)
+    note.title = title
+    note.remark = remark
+    note.save()
     return HttpResponse(json.dumps(ret), content_type="application/json")

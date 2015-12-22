@@ -35,7 +35,8 @@ class Notes(BaseModel):
 class Invest_Notes(BaseModel): 
     note = models.ForeignKey(Notes)
     security_name = models.CharField(max_length=50)
-    buy_unit_price = models.DecimalField(max_digits=6, decimal_places=2,default=0)
+    direction = models.CharField(max_length=1)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2,default=0)
     quantity = models.DecimalField(max_digits=12, decimal_places=4,default=0)
     total_price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
     
@@ -46,8 +47,17 @@ class Invest_Notes(BaseModel):
         db_table = 'notes_investments'        
     
 class Account_Notes(BaseModel):    
+    COMMODITY_TYPES = (
+        ('1', '日用品'),
+        ('2', '餐饮'),
+        ('3', '水电煤'),
+        ('4', '人情'),
+    )    
+    
     note = models.ForeignKey(Notes)
     commodity_name = models.CharField(max_length=50)
+    commodity_type =  models.CharField(max_length=3)
+    direction = models.CharField(max_length=1)
     total_price = models.DecimalField(max_digits=12, decimal_places=2)
     
     def __str__(self):
