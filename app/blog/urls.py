@@ -8,5 +8,8 @@ urlpatterns = [
     url(r'^$', blog_views.index, name='blog_index'),
     url(r'^notes$', blog_views.notes, name='notes'),   
     url(r'^get_notes/$',blog_views.get_notes),
-    url(r'^change_note/$',blog_views.change_note),     
+    url(r'^get_securities/$',blog_views.get_securities),
+    url(r'^change_note/$',blog_views.change_note),  
+    url(r'^delete_note/$',blog_views.delete_note),         
+    url(r'^lab/angularjs/$',blog_views.lab_angularjs),
 ]

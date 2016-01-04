@@ -33,9 +33,14 @@ class Notes(BaseModel):
          
         
 class Invest_Notes(BaseModel): 
+    INVEST_DIRECTIONS = (
+        ('1', '买入'),
+        ('2', '卖出'),
+    )    
+    
     note = models.ForeignKey(Notes)
     security_name = models.CharField(max_length=50)
-    direction = models.CharField(max_length=1)
+    direction = models.CharField(max_length=1, choices=INVEST_DIRECTIONS)
     unit_price = models.DecimalField(max_digits=6, decimal_places=2,default=0)
     quantity = models.DecimalField(max_digits=12, decimal_places=4,default=0)
     total_price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
@@ -54,10 +59,15 @@ class Account_Notes(BaseModel):
         ('4', '人情'),
     )    
     
+    MONEY_DIRECTIONS = (
+        ('1', '收入'),
+        ('2', '支出'),
+    )    
+    
     note = models.ForeignKey(Notes)
     commodity_name = models.CharField(max_length=50)
-    commodity_type =  models.CharField(max_length=3)
-    direction = models.CharField(max_length=1)
+    commodity_type =  models.CharField(max_length=3,choices=COMMODITY_TYPES)
+    direction = models.CharField(max_length=1,choices=MONEY_DIRECTIONS)
     total_price = models.DecimalField(max_digits=12, decimal_places=2)
     
     def __str__(self):

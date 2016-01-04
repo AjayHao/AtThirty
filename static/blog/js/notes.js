@@ -44,6 +44,7 @@ function renderNotesHtml(event,view){
 		        event.note_type_name,'-',event.title,'</span><br><div class="remark_line">',
 		        _rmk,'</div></i>' ].join("");
 	}
+
 	return _html;
 }
 

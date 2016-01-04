@@ -11,14 +11,14 @@
 }
 
 .memo_color{
-	border-color : #4cae4c;
-    background-color: #5cb85c;
+	border-color : #5959ff;
+    background-color: #428bca;
 	color : #fff;    
 }
 
 .invest_color{
-	border-color : #e87352;
-    background-color: #ee2711;
+	border-color : #ee957b;
+    background-color: #ef5a5a;
 	color : #fff;
 }
 
@@ -32,15 +32,23 @@
 	padding : 3px;
 }
 
-.mdpad{
+/* .mdpad{
 	padding : 5px;
-}
+} */
 
 .remark_line{
 	line-height: 1.5em;
 	padding-left: 3em;
 }
 
+.note_modal .modal-body{
+	max-height : 400px;
+	overflow : auto;
+}
+
+.form-horizonal select{
+	padding-top : 7px;
+}
 /* btn */
 /*.btn-outline {
     color: inherit;
