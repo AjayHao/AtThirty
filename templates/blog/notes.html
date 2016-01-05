@@ -277,13 +277,13 @@
 				$scope.noteSel = noteSel;
 				$scope.noteSel.secuSel = {};
 				
-				var cacuSecu = function(){
+				var cacuSecuTotal = function(){
 					$scope.noteSel.total = $scope.noteSel.totalOut = $scope.noteSel.totalIn = 0;
 					
 					angular.forEach($scope.noteSel.securities,function(item){
 						
 						if(angular.isNumber(item.total_price)){
-							if(item.direction == "1"){
+							if(item.direction.value == "1"){
 								$scope.noteSel.totalOut += item.total_price;
 								$scope.noteSel.total -= item.total_price;
 							}else{
@@ -305,8 +305,9 @@
 					$scope.noteSel.remark = $scope.noteSel.remark || '';
 				}else{
 					$scope.editClicked = false;
+					$scope.noteSel.secuInfoShow = false;
 					if($scope.noteSel.note_type == '2'){
-						cacuSecu();
+						cacuSecuTotal();
 					}
 				}
 				$scope.retObj = {};
@@ -318,7 +319,6 @@
 					}else if($scope.noteSel.note_type == '2'){
 						$scope.noteSel.typeClassName = 'fa-money';
 						$scope.noteSel.colorClassName = 'invest_color';
-						$scope.noteSel.direction = '1';
 					}else if($scope.noteSel.note_type == '3'){
 						$scope.noteSel.typeClassName = 'fa-book';
 						$scope.noteSel.colorClassName = 'account_color';
@@ -368,15 +368,17 @@
 				};
 				
 				$scope.secuAdd = function(){
+					$scope.noteSel.secuSel = {};
 					if(!$scope.noteSel.securities){
 						$scope.noteSel.securities = new Array();						
 					}
-					$scope.noteSel.secuSel = {};
+					var len = $scope.noteSel.securities.length;
+					$scope.noteSel.securities[len] = $scope.noteSel.secuSel;
 					$scope.noteSel.secuInfoShow = true;
 				};
 				
-				$scope.secuConfirm = function(){
-					$scope.noteSel.secuInfoShow = false;
+				/* $scope.secuConfirm = function(){
+					
 					if(isNaN($scope.noteSel.secuSel.unit_price) || isNaN($scope.noteSel.secuSel.quantity)){
 						return;
 					}
@@ -386,22 +388,43 @@
 					$scope.noteSel.securities.push(
 						{
 							"secu_name" : $scope.noteSel.secuSel.secu_name,
-							"direction_name" : $scope.noteSel.secuSel.direction.label,
-							"direction" : $scope.noteSel.secuSel.direction.value,
+							"direction" : $scope.noteSel.secuSel.direction,  //object as {label:xxx,value:xxx}
 							"unit_price" : $scope.noteSel.secuSel.unit_price,
 							"quantity" : $scope.noteSel.secuSel.quantity,
 							"total_price" : $scope.noteSel.secuSel.total_price
 						}		
 					);
 					
-					cacuSecu();
+					cacuSecuTotal();
 					
-				};
+					$scope.noteSel.secuInfoShow = false;
+					
+				}; */
+
+				$scope.cacuSecuSel = function(){
+					
+					if(isNaN($scope.noteSel.secuSel.unit_price) || isNaN($scope.noteSel.secuSel.quantity)){
+						return;
+					}
+					
+					$scope.noteSel.secuSel.total_price = $scope.noteSel.secuSel.unit_price * $scope.noteSel.secuSel.quantity;
+					cacuSecuTotal();
+				}
 				
 				$scope.secuRemove = function(idx){
 					//if(!$scope.noteSel.securities || $scope.noteSel.securities.length == 0) return;
 					$scope.noteSel.securities.splice(idx,1);
-					cacuSecu();
+					cacuSecuTotal();
+				};
+				
+				$scope.secuDetail = function(secuSel){
+					//alert(angular.toJson(secuSel.direction));
+					$scope.noteSel.secuSel = secuSel;
+					$scope.noteSel.secuInfoShow = $scope.editClicked;
+				};
+				
+				$scope.isShowSecu = function(){
+					return $scope.noteSel.secuInfoShow && $scope.editClicked;					
 				}
 				
 				$scope.edit = function() {
@@ -410,7 +433,7 @@
 				
 				$scope.cancel = function(){
 					$scope.editClicked = false;
-				}
+				};
 			});
 </script>
 <!-- /Calendar -->

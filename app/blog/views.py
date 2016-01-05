@@ -28,8 +28,7 @@ def get_securities(req):
         f = {}
         #f = item['fields']
         f['secu_name'] = item.security_name
-        f['direction'] = item.direction
-        f['direction_name'] = item.get_direction_display()
+        f['direction'] = dict(label=item.get_direction_display(), value=item.direction)
         f['unit_price'] = float(item.unit_price)
         f['quantity'] = float(item.quantity)
         f['total_price'] = float(item.total_price)
@@ -126,9 +125,10 @@ def change_note(req):
         if note_type == '2' :
             securities = req_json['securities']
             for s in securities:
+                d_obj = s['direction']
                 #create new securities
                 Invest_Notes.objects.create(security_name= s['secu_name'],
-                                            direction= s['direction'],
+                                            direction= d_obj['value'],
                                             unit_price= s['unit_price'],
                                             quantity= s['quantity'],
                                             total_price= s['total_price'],

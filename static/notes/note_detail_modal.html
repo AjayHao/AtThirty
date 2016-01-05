@@ -64,8 +64,8 @@
 					<thead>
 						<tr class="success">
 							<th>
-								<button type="button" class="btn btn-default btn-xs"
-									ng-click="secuConfirm()" ng-show="noteSel.secuInfoShow">确定</button>
+								<!-- <button type="button" class="btn btn-default btn-xs"
+									ng-click="secuConfirm()" ng-show="isShowSecu()">确定</button> -->
 							</th>
 							<th>标的</th>
 							<th style="width: 15%">方向</th>
@@ -84,7 +84,7 @@
 							ng-click="secuDetail(item)">
 							<td>{{$index+1}}</td>
 							<td>{{item.secu_name}}</td>
-							<td>{{item.direction_name}}</td>
+							<td>{{item.direction.label}}</td>
 							<td>{{item.unit_price}}</td>
 							<td>{{item.quantity}}</td>
 							<td>{{item.total_price}}</td>
@@ -98,7 +98,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="form-group" ng-show="noteSel.secuInfoShow">
+			<div class="form-group" ng-show="isShowSecu()">
 				<label for="secu_name" class="col-sm-2 control-label">标的名称:</label>
 				<div class="col-sm-4">
 					<input id="secu_name" type="text" class="form-control"
@@ -108,22 +108,25 @@
 				<div class="col-sm-4">
 					<select class="form-control" id="direction"
 						ng-model="noteSel.secuSel.direction" ng-readonly="!editClicked"
-						ng-options="item.label for item in DicObj.InvestDirectionDic">
+						ng-options="item.label for item in DicObj.InvestDirectionDic track by item.value"
+						ng-change="cacuSecuSel()">
 					</select>
 				</div>
 			</div>
-			<div class="form-group" ng-show="noteSel.secuInfoShow">
+			<div class="form-group" ng-show="isShowSecu()">
 				<label for="unit_price" class="col-sm-2 control-label">价格:</label>
 				<div class="col-sm-4">
 					<div class="input-group">
 						<input id="unit_price" type="text" class="form-control"
-							ng-model="noteSel.secuSel.unit_price" ng-readonly="!editClicked" />
+							ng-model="noteSel.secuSel.unit_price" ng-readonly="!editClicked" 
+							ng-change="cacuSecuSel()"/>
 					</div>
 				</div>
 				<label for="quantity" class="col-sm-2 control-label">数量:</label>
 				<div class="col-sm-4">
 					<input id="quantity" type="text" class="form-control"
-						ng-model="noteSel.secuSel.quantity" ng-readonly="!editClicked" />
+						ng-model="noteSel.secuSel.quantity" ng-readonly="!editClicked" 
+						ng-change="cacuSecuSel()"/>
 				</div>
 			</div>
 		</form>
@@ -148,8 +151,7 @@
 				data-loading-text="处理中.." ng-show="editClicked" ng-click="ok()">
 				<i class="fa fa-check">确定</i>
 			</button>
-			<button type="button" class="btn btn-default" ng-show="editClicked"
-				ng-click="cancel()">
+			<button type="button" class="btn btn-default" ng-show="editClicked" ng-click="cancel()">
 				<i class="fa fa-times">取消</i>
 			</button>
 		</div>
