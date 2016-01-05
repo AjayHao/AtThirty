@@ -340,6 +340,7 @@
 				var failureDDL = function(response){
 					$scope.retObj.retMsg = response.status + ":" + response.statusText;
 					$scope.retObj.className = 'bg-danger';
+					
 				}
 
 				$scope.remove = function() {
@@ -350,10 +351,11 @@
 					
 					$('#delBtn').button('loading');	
 					
-					var reqData = $scope.noteSel;
-					
-					$http.post( '/delete_note/',reqData)
-						.then(successDDL, failureDDL);
+					//var reqData = $scope.noteSel;
+					var note_id = $scope.noteSel.note_id;
+					$http.delete( '/delete_note/'+note_id)
+						.then(successDDL, failureDDL)
+							.then(function(){$('#delBtn').button('reset')});
 				};
 				
 				$scope.ok = function() {
@@ -361,9 +363,11 @@
 					if(!window.confirm("确认提交?")){
 						return;
 					}
+					
 					$('#okBtn').button('loading');
 					$http.post( '/change_note/',reqData)
-						.then(successDDL, failureDDL);
+						.then(successDDL, failureDDL)
+							.then(function(){$('#okBtn').button('reset')});
 					
 				};
 				
