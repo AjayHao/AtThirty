@@ -124,14 +124,20 @@
 		
 		$scope.DicObj = { NoteTypeDic : [{"label" : "备忘录","value" : "1"},
 					                      {"label" : "投资","value" : "2"},
-					                      {"label" : "记账","value" : "3"}
-					                      ],
+					                      {"label" : "记账","value" : "3"} ],
 					      InvestDirectionDic : [{"label" : "买入","value" : "1"},
-					                      {"label" : "卖出","value" : "2"}
-					                      ],
+					                      {"label" : "卖出","value" : "2"} ],
 					      MoneyDirectDic : [{"label" : "收入","value" : "1"},
-						                      {"label" : "支出","value" : "2"}
-	                      ]
+						                      {"label" : "支出","value" : "2"}],
+					      CommodityTypeDic : [{"label" : "日用品","value" : "1"},
+						                      {"label" : "餐饮","value" : "2"},
+						                      {"label" : "水电煤","value" : "3"},
+						                      {"label" : "人情","value" : "4"}],
+						  PayTypeDic : [{"label" : "现金","value" : "1"},
+						                {"label" : "信用卡","value" : "2"},						  
+						                {"label" : "支付宝","value" : "3"},
+						                {"label" : "实体消费券","value" : "4"},
+						                {"label" : "电子消费券","value" : "5"}]					                      
 		};
 		
 		$document.ready(function() {
@@ -216,7 +222,7 @@
 	    		}
 				
 				if($scope.noteSel.note_type && $scope.noteSel.note_type == '3'){
-	    			//$scope.retObj.
+	    			$scope.noteSel.accounts = response.data;
 	    		}
 				
 				var modalInstance = $uibModal.open({
@@ -234,14 +240,16 @@
 					}
 				});
 		
-				modalInstance.result.then(function() {
-						// codes go here when calling $uibModalInstance.close
-						$scope.noteSel = {}; //reset selected note
-						$scope.calendar.fullCalendar('refetchEvents');
-					}, function() {
-						// codes go here $uibModalInstance.dismiss
-						$scope.noteSel = {}; //reset selected note
-					});
+				modalInstance.result.then(
+							function() {
+								// codes go here when calling $uibModalInstance.close
+								$scope.calendar.fullCalendar('refetchEvents');
+							}, function() {
+							// codes go here $uibModalInstance.dismiss
+							})
+						.then(function(){
+							$scope.noteSel = {}; //reset selected note
+						});
 				
 			};
 			
@@ -250,16 +258,15 @@
 					openModalDialog();
 				}
 				
+				var url;
 				if(noteSel.note_type == '2'){
-					var params = {note_id : noteSel.note_id};
-					$http.get('/get_securities/', { params : params})
-						.then(openModalDialog, function errorCallback(response) {});					
-				}
-				
-				if(noteSel.note_type == '3'){
-					$http.get('/get_securities/', {note_id : noteSel.note_id})
-						.then(openModalDialog, function errorCallback(response) {});
-				}			
+					url = '/get_securities/';
+				}else if(noteSel.note_type == '3'){
+					url = '/get_accounts/';
+				}	
+				var params = {note_id : noteSel.note_id};
+				$http.get(url, { params : params})
+					.then(openModalDialog, function errorCallback(response) {});
 			}else{
 				openModalDialog();
 			}
@@ -274,55 +281,84 @@
 			function($scope, $http, $timeout, $uibModalInstance, noteSel, DicObj) {
 				$scope.DicObj = DicObj;
 				$scope.opType = (noteSel.note_id) ? 'detail' : 'add';
-				$scope.noteSel = noteSel;
-				$scope.noteSel.secuSel = {};
+				$scope.noteSel  = noteSel;
+				$scope.noteSel.note_type = noteSel.note_type || '1';
+				$scope.noteSelInit = angular.copy(noteSel);  //deep copy in case reset
+				$scope.noteSel.rowSel = {};
+				$scope.retObj = {};  
 				
-				var cacuSecuTotal = function(){
+				
+				$scope.cacuTotal = function(){
 					$scope.noteSel.total = $scope.noteSel.totalOut = $scope.noteSel.totalIn = 0;
 					
-					angular.forEach($scope.noteSel.securities,function(item){
+					var selArr = ($scope.noteSel.note_type == '2') ? 
+									$scope.noteSel.securities : $scope.noteSel.accounts;
+					angular.forEach(selArr ,function(item){
 						
-						if(angular.isNumber(item.total_price)){
-							if(item.direction.value == "1"){
-								$scope.noteSel.totalOut += item.total_price;
-								$scope.noteSel.total -= item.total_price;
+						if(!isNaN(item.total_price)){
+							var k;
+							if(item.direction.value == '1'){
+								if($scope.noteSel.note_type == '2'){
+									$scope.noteSel.totalOut += (1*item.total_price);
+									k = -1;
+								}else{
+									$scope.noteSel.totalIn += (1*item.total_price);
+									k = 1;
+								}
+								$scope.noteSel.total += (1*item.total_price);			
 							}else{
-								$scope.noteSel.totalIn += item.total_price;
-								$scope.noteSel.total += item.total_price;
+								if($scope.noteSel.note_type == '3'){
+									$scope.noteSel.totalOut += (1*item.total_price);
+									k = -1;
+								}else{
+									$scope.noteSel.totalIn += (1*item.total_price);
+									k = 1;
+								}
+								$scope.noteSel.total += (k*item.total_price);
 							}
 						}
 					});
 				}
 				
-				
-				if($scope.opType == 'add'){
-					$scope.editClicked = true;
-					$scope.noteSel.note_id = '';
-					$scope.noteSel.note_type = '1';
-					$scope.noteSel.typeClassName = 'fa-calendar';
-					$scope.noteSel.colorClassName = 'memo_color';
-					$scope.noteSel.note_title = $scope.noteSel.note_title || '';
-					$scope.noteSel.remark = $scope.noteSel.remark || '';
-				}else{
-					$scope.editClicked = false;
-					$scope.noteSel.secuInfoShow = false;
-					if($scope.noteSel.note_type == '2'){
-						cacuSecuTotal();
+				var initModal = function(){
+					if($scope.opType == 'add'){
+						$scope.editClicked = true;
+						$scope.noteSel.note_id = '';
+						$scope.noteSel.note_title = $scope.noteSel.note_title || '';
+						$scope.noteSel.remark = $scope.noteSel.remark || '';
+					}else{
+						$scope.editClicked = false;
+						$scope.noteSel.totalOut = $scope.noteSel.totalIn = 0;
+						if($scope.noteSel.note_type == '2'){
+							$scope.noteSel.rowInfoShow = false;
+							$scope.cacuTotal();
+						}
+						if($scope.noteSel.note_type == '3'){
+							$scope.noteSel.rowInfoShow = false;
+							$scope.cacuTotal();
+						}
 					}
-				}
-				$scope.retObj = {};
-
-				$scope.chooseNoteType = function(){
-					if($scope.noteSel.note_type == '1'){
-						$scope.noteSel.typeClassName = 'fa-calendar';
-						$scope.noteSel.colorClassName = 'memo_color';
-					}else if($scope.noteSel.note_type == '2'){
+					
+					if($scope.noteSel.note_type == '2'){
 						$scope.noteSel.typeClassName = 'fa-money';
 						$scope.noteSel.colorClassName = 'invest_color';
 					}else if($scope.noteSel.note_type == '3'){
 						$scope.noteSel.typeClassName = 'fa-book';
 						$scope.noteSel.colorClassName = 'account_color';
+						$scope.noteSel.note_title = $scope.noteSel.note_title || '流水账'; //记账 默认标题 
+					}else{
+						$scope.noteSel.typeClassName = 'fa-calendar';
+						$scope.noteSel.colorClassName = 'memo_color';
 					}
+				};  //first call
+
+				initModal();
+				
+				$scope.changeNoteType = function(){
+					if(!confirm("更改速记类型将清空内容，是否继续？")) return;
+					var _nt = {note_type : $scope.noteSel.note_type};
+					$scope.noteSel = angular.merge({},$scope.noteSelInit, _nt);
+					initModal();
 				}
 				
 				var successDDL = function(response){
@@ -371,64 +407,91 @@
 					
 				};
 				
-				$scope.secuAdd = function(){
-					$scope.noteSel.secuSel = {};
-					if(!$scope.noteSel.securities){
-						$scope.noteSel.securities = new Array();						
+				$scope.rowAdd = function(){
+					$scope.noteSel.rowSel = {};
+					if($scope.noteSel.note_type == '2'){
+						if(!$scope.noteSel.securities){
+							$scope.noteSel.securities = new Array();						
+						}
+						var len = $scope.noteSel.securities.length;
+						$scope.noteSel.securities[len] = $scope.noteSel.rowSel;						
+					}else if($scope.noteSel.note_type == '3'){
+						if(!$scope.noteSel.accounts){
+							$scope.noteSel.accounts = new Array();						
+						}
+						var len = $scope.noteSel.accounts.length;
+						$scope.noteSel.accounts[len] = $scope.noteSel.rowSel;
 					}
-					var len = $scope.noteSel.securities.length;
-					$scope.noteSel.securities[len] = $scope.noteSel.secuSel;
-					$scope.noteSel.secuInfoShow = true;
+					$scope.noteSel.rowInfoShow = true;
 				};
+				
 				
 				/* $scope.secuConfirm = function(){
 					
-					if(isNaN($scope.noteSel.secuSel.unit_price) || isNaN($scope.noteSel.secuSel.quantity)){
+					if(isNaN($scope.noteSel.rowSel.unit_price) || isNaN($scope.noteSel.rowSel.quantity)){
 						return;
 					}
 					
-					$scope.noteSel.secuSel.total_price = $scope.noteSel.secuSel.unit_price * $scope.noteSel.secuSel.quantity;
+					$scope.noteSel.rowSel.total_price = $scope.noteSel.rowSel.unit_price * $scope.noteSel.rowSel.quantity;
 					
 					$scope.noteSel.securities.push(
 						{
-							"secu_name" : $scope.noteSel.secuSel.secu_name,
-							"direction" : $scope.noteSel.secuSel.direction,  //object as {label:xxx,value:xxx}
-							"unit_price" : $scope.noteSel.secuSel.unit_price,
-							"quantity" : $scope.noteSel.secuSel.quantity,
-							"total_price" : $scope.noteSel.secuSel.total_price
+							"secu_name" : $scope.noteSel.rowSel.secu_name,
+							"direction" : $scope.noteSel.rowSel.direction,  //object as {label:xxx,value:xxx}
+							"unit_price" : $scope.noteSel.rowSel.unit_price,
+							"quantity" : $scope.noteSel.rowSel.quantity,
+							"total_price" : $scope.noteSel.rowSel.total_price
 						}		
 					);
 					
-					cacuSecuTotal();
+					$scope.cacuTotal();
 					
-					$scope.noteSel.secuInfoShow = false;
+					$scope.noteSel.rowInfoShow = false;
 					
 				}; */
 
 				$scope.cacuSecuSel = function(){
 					
-					if(isNaN($scope.noteSel.secuSel.unit_price) || isNaN($scope.noteSel.secuSel.quantity)){
+					if(isNaN($scope.noteSel.rowSel.unit_price) || isNaN($scope.noteSel.rowSel.quantity)){
 						return;
 					}
 					
-					$scope.noteSel.secuSel.total_price = $scope.noteSel.secuSel.unit_price * $scope.noteSel.secuSel.quantity;
-					cacuSecuTotal();
+					$scope.noteSel.rowSel.total_price = $scope.noteSel.rowSel.unit_price * $scope.noteSel.rowSel.quantity;
+					$scope.cacuTotal();
 				}
 				
-				$scope.secuRemove = function(idx){
+				$scope.rowRemove = function(idx){
 					//if(!$scope.noteSel.securities || $scope.noteSel.securities.length == 0) return;
-					$scope.noteSel.securities.splice(idx,1);
-					cacuSecuTotal();
+					if($scope.noteSel.note_type == '2'){
+						$scope.noteSel.securities.splice(idx,1);
+					}else{
+						$scope.noteSel.accounts.splice(idx,1);
+					}
+					$scope.cacuTotal();
 				};
 				
-				$scope.secuDetail = function(secuSel){
-					//alert(angular.toJson(secuSel.direction));
-					$scope.noteSel.secuSel = secuSel;
-					$scope.noteSel.secuInfoShow = $scope.editClicked;
+				$scope.accountRemove = function(idx){
+					//if(!$scope.noteSel.securities || $scope.noteSel.securities.length == 0) return;
+					$scope.noteSel.accounts.splice(idx,1);
+					$scope.cacuTotal();
+				};
+				
+				$scope.rowDetail = function(rowSel){
+					//alert(angular.toJson(rowSel.direction));
+					$scope.noteSel.rowSel = rowSel;
+					$scope.noteSel.rowInfoShow = $scope.editClicked;
 				};
 				
 				$scope.isShowSecu = function(){
-					return $scope.noteSel.secuInfoShow && $scope.editClicked;					
+					return $scope.noteSel.note_type == '2' && 
+								$scope.noteSel.rowInfoShow && 
+									$scope.editClicked;					
+				}
+				
+				$scope.isShowAccount = function(){
+					return $scope.noteSel.note_type == '3' && 
+							$scope.noteSel.rowInfoShow && 
+								$scope.editClicked;					
 				}
 				
 				$scope.edit = function() {

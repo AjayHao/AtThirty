@@ -64,9 +64,18 @@ class Account_Notes(BaseModel):
         ('2', '支出'),
     )    
     
+    PAY_TYPES = (
+        ('1', '现金'),
+        ('2', '信用卡'),
+        ('3', '支付宝'),
+        ('4', '实体消费券'),
+        ('5', '电子消费券'),
+    )
+    
     note = models.ForeignKey(Notes)
     commodity_name = models.CharField(max_length=50)
     commodity_type =  models.CharField(max_length=3,choices=COMMODITY_TYPES)
+    pay_type = models.CharField(max_length=3,choices=PAY_TYPES)
     direction = models.CharField(max_length=1,choices=MONEY_DIRECTIONS)
     total_price = models.DecimalField(max_digits=12, decimal_places=2)
     

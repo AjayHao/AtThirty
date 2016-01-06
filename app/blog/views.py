@@ -35,6 +35,21 @@ def get_securities(req):
         ret.append(f)
     return HttpResponse(json.dumps(ret), content_type="application/json")
 
+def get_accounts(req):
+    qNoteId = req.GET['note_id']
+    accounts = Account_Notes.objects.filter(note_id=qNoteId)
+    #temp = json.loads(serializers.serialize("json", securities))
+    ret =  []
+    for item in accounts:
+        f = {}
+        #f = item['fields']
+        f['commodity_name'] = item.commodity_name
+        f['commodity_type'] = dict(label=item.get_commodity_type_display(), value=item.commodity_type)
+        f['pay_type'] = dict(label=item.get_pay_type_display(), value=item.pay_type)
+        f['direction'] = dict(label=item.get_direction_display(), value=item.direction)
+        f['total_price'] = float(item.total_price)
+        ret.append(f)
+    return HttpResponse(json.dumps(ret), content_type="application/json")
 
 def get_notes(req):
     qBegin = req.GET['start']
@@ -134,20 +149,32 @@ def change_note(req):
                                             total_price= s['total_price'],
                                             note = note
                                             )
+                
+        elif note_type == '3' :
+            accounts = req_json['accounts']
+            for a in accounts:
+                ct_obj = a['commodity_type']
+                d_obj = a['direction']
+                p_obj = a['pay_type']
+                #create new securities
+                Account_Notes.objects.create(commodity_name= a['commodity_name'],
+                                            commodity_type= ct_obj['value'],
+                                            direction= d_obj['value'],
+                                            pay_type= p_obj['value'],
+                                            total_price= a['total_price'],
+                                            note = note
+                                            )                
     except Exception as e:
         print(e)
         ret['retMsg'] = e            
     return HttpResponse(json.dumps(ret), content_type="application/json")
 
 
-def delete_note(req):
+def delete_note(req, noteid=None):
     
     ret = {'retCode':'0', 'retMsg':'删除成功'}
     try:
-        #if req.method == 'POST':
-        req_json = json.loads(req.body.decode())
-        note_id = req_json['note_id']
-        note = Notes.objects.get(id=note_id)
+        note = Notes.objects.get(id=noteid)
         note.delete()
     except Exception as e:
         print(e)

@@ -9,7 +9,9 @@ urlpatterns = [
     url(r'^notes$', blog_views.notes, name='notes'),   
     url(r'^get_notes/$',blog_views.get_notes),
     url(r'^get_securities/$',blog_views.get_securities),
+    url(r'^get_accounts/$',blog_views.get_accounts), 
     url(r'^change_note/$',blog_views.change_note),  
     url(r'^delete_note/(?P<noteid>\d+)/$',blog_views.delete_note),         
     url(r'^lab/angularjs/$',blog_views.lab_angularjs),
+    
 ]
