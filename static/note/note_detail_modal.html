@@ -5,7 +5,7 @@
 			<span aria-hidden="true">&times;</span>
 		</button>
 		<h4 class="modal-title">
-			<div class="col-md-3">
+			<div class="col-lg-3">
 				<i class="fa {{noteSel.typeClassName}}"> 
 				<span class="mdpad" ng-hide="opType=='add'">{{noteSel.note_type_name}}</span> 
 				<span class="mdpad" style="color: #000" ng-show="opType=='add'">
@@ -16,7 +16,7 @@
 				</span>
 				</i>
 			</div>
-			<div class="col-md-4 col-md-offset-4" ng-hide="noteSel.note_type == '1'">
+			<div class="col-lg-3 col-lg-offset-5" ng-hide="noteSel.note_type == '1'">
 				总额：{{noteSel.total}}
 			</div>
 		</h4>
@@ -28,13 +28,25 @@
 			<div class="form-group">
 				<label for="begin_date" class="col-sm-2 control-label">开始时间:</label>
 				<div class="col-sm-4">
-					<input id="begin_date" type="text" class="form-control"
-						ng-model="noteSel.begin_date" ng-readonly="!editClicked" />
+					<p class="input-group">
+						<input id="begin_date" type="text" class="form-control"
+						uib-datepicker-popup="yyyy-MM-dd" ng-required="true" close-text="Close" is-open="status.opened"
+							ng-model="noteSel.begin_date" ng-readonly="!editClicked" />
+						<span class="input-group-btn" ng-show="editClicked">
+	                		<button type="button" class="btn btn-default" ng-click="status.opened = true"><i class="glyphicon glyphicon-calendar"></i></button>
+	              		</span>
+              		</p>
 				</div>
 				<label for="end_date" class="col-sm-2 control-label">结束时间:</label>
 				<div class="col-sm-4">
-					<input id="end_date" type="text" class="form-control"
-						ng-model="noteSel.end_date" ng-readonly="!editClicked" />
+					<p class="input-group">
+						<input id="end_date" type="text" class="form-control"
+						uib-datepicker-popup="yyyy-MM-dd" ng-required="true" close-text="Close" is-open="status.opened"
+							ng-model="noteSel.end_date" ng-readonly="!editClicked" />
+						<span class="input-group-btn" ng-show="editClicked">
+		                	<button type="button" class="btn btn-default" ng-click="status.opened = true"><i class="glyphicon glyphicon-calendar"></i></button>
+		              	</span>		
+	              	</p>				
 				</div>
 			</div>
 			<div class="form-group">
