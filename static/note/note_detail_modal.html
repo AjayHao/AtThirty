@@ -193,7 +193,7 @@
 					<select class="form-control" id="direction"
 						ng-model="noteSel.rowSel.direction" ng-readonly="!editClicked"
 						ng-options="item.label for item in DicObj.MoneyDirectDic track by item.value"
-						ng-change="cacuSecuTotal()">
+						ng-change="cacuTotal()">
 					</select>
 				</div>
 				<label for="pay_type" class="col-sm-2 control-label">支付途径:</label>
@@ -205,11 +205,11 @@
 				</div>
 			</div>
 			<div class="form-group" ng-show="isShowAccount()">
-				<label for="quantity" class="col-sm-2 control-label">总价:</label>
+				<label for="total_price" class="col-sm-2 control-label">总价:</label>
 				<div class="col-sm-4">
-					<input id="quantity" type="text" class="form-control"
+					<input id="total_price" type="text" class="form-control"
 						ng-model="noteSel.rowSel.total_price" ng-readonly="!editClicked" 
-						ng-change="cacuSecuTotal()"/>
+						ng-change="cacuTotal()"/>
 				</div>
 			</div>
 		</form>

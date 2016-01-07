@@ -47,7 +47,7 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'AtThirty.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'test',  
+        'NAME': 'atthirty',  
         'USER': 'ajay',  
         'PASSWORD': 'ajay', 
         'HOST': '',  # Set to empty string for localhost. Not used with sqlite3.

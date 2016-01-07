@@ -74,7 +74,7 @@ class Account_Notes(BaseModel):
     
     note = models.ForeignKey(Notes)
     commodity_name = models.CharField(max_length=50)
-    commodity_type =  models.CharField(max_length=3,choices=COMMODITY_TYPES)
+    commodity_type =  models.CharField(max_length=3,choices=COMMODITY_TYPES,blank=True,null=True)
     pay_type = models.CharField(max_length=3,choices=PAY_TYPES)
     direction = models.CharField(max_length=1,choices=MONEY_DIRECTIONS)
     total_price = models.DecimalField(max_digits=12, decimal_places=2)

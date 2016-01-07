@@ -178,7 +178,7 @@
 						},
 						editable : false, //close dragging function
 						events : {
-							url : '/get_notes/',
+							url : '/notes/get_notes/',
 							type : 'GET',
 							//data : paraData || [],
 							data : getParamJson,
@@ -227,9 +227,10 @@
 				
 				var modalInstance = $uibModal.open({
 					animation : true,
-					templateUrl : '/static/notes/note_detail_modal.html',
+					templateUrl : '/static/note/note_detail_modal.html',
 					controller : 'ModalInstanceCtrl',
 					size : 'modal-lg',
+					backdrop : 'static',  //reject autodrop when clicking outside
 					resolve : {
 						noteSel : function(){
 							return $scope.noteSel;
@@ -260,9 +261,9 @@
 				
 				var url;
 				if(noteSel.note_type == '2'){
-					url = '/get_securities/';
+					url = '/notes/get_securities/';
 				}else if(noteSel.note_type == '3'){
-					url = '/get_accounts/';
+					url = '/notes/get_accounts/';
 				}	
 				var params = {note_id : noteSel.note_id};
 				$http.get(url, { params : params})
@@ -355,7 +356,7 @@
 				initModal();
 				
 				$scope.changeNoteType = function(){
-					if(!confirm("更改速记类型将清空内容，是否继续？")) return;
+					//if(!confirm("更改速记类型将清空内容，是否继续？")) return;
 					var _nt = {note_type : $scope.noteSel.note_type};
 					$scope.noteSel = angular.merge({},$scope.noteSelInit, _nt);
 					initModal();
@@ -389,19 +390,19 @@
 					
 					//var reqData = $scope.noteSel;
 					var note_id = $scope.noteSel.note_id;
-					$http.delete( '/delete_note/'+note_id)
+					$http.delete( '/notes/delete_note/'+note_id)
 						.then(successDDL, failureDDL)
 							.then(function(){$('#delBtn').button('reset')});
 				};
 				
 				$scope.ok = function() {
 					var reqData = $scope.noteSel;
-					if(!window.confirm("确认提交?")){
+					/* if(!window.confirm("确认提交?")){
 						return;
-					}
+					} */
 					
 					$('#okBtn').button('loading');
-					$http.post( '/change_note/',reqData)
+					$http.post( '/notes/change_note/',reqData)
 						.then(successDDL, failureDDL)
 							.then(function(){$('#okBtn').button('reset')});
 					
