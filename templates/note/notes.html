@@ -1,8 +1,9 @@
 {% extends "blog_base.html" %} {% block custom_style %}
-<link rel='stylesheet' href='/static/css/jquery-ui.min.css' />
-<link rel="stylesheet" href="/static/css/font-awesome.css" />
-<link rel="stylesheet" href="/static/css/fullcalendar.min.css" />
-<link rel="stylesheet" href="/static/css/notes.css" />
+{% load staticfiles %}
+<link rel='stylesheet' href="{% static 'css/jquery-ui.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/font-awesome.css' %}" />
+<link rel="stylesheet" href="{% static 'css/fullcalendar.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/notes.css' %}" />
 <style>
 
 #loading {
@@ -12,15 +13,11 @@
 	right: 20px;
 }
 
-/* #calendar {
-	max-width: 900px;
-	margin: 20px auto;
-	padding: 0 10px;
-} */
 </style>
-{% endblock %} {% block content %} {% verbatim %}
+	
+{% endblock %} {% block content %}
+ {% verbatim %}
 <div class="container" ng-controller="noteController">
-
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
@@ -108,13 +105,18 @@
 </div>
 <!-- /.container -->
 {% endverbatim %} {% endblock %} {% block custom_js %}
-<script type="text/javascript" src="/static/js/moment.min.js"></script>
-<script type="text/javascript" src="/static/js/fullcalendar.min.js"></script>
-<script type="text/javascript" src="/static/js/lang-all.js"></script>
-<script type="text/javascript" src="/static/js/ui-bootstrap-tpls-0.14.3.min.js"></script>
-<script type="text/javascript" src="/static/js/notes.js"></script>
+<script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/fullcalendar.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/lang-all.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/notes.js' %}"></script>
 <script>
-	var blogApp = angular.module("blogApp", [ 'ui.bootstrap' ]);
+	var blogApp = angular.module("blogApp", [ 'ui.bootstrap' ]).
+							config(function($httpProvider){
+								$httpProvider.defaults.xsrfCookieName = 'csrftoken';
+								$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+							});
 
 	blogApp.controller("noteController", function( $scope, $http, $document,  $uibModal) {
 		$scope.obj = new Object();
@@ -390,7 +392,7 @@
 					
 					//var reqData = $scope.noteSel;
 					var note_id = $scope.noteSel.note_id;
-					$http.delete( '/notes/delete_note/'+note_id)
+					$http.delete( '/notes/note/'+note_id)
 						.then(successDDL, failureDDL)
 							.then(function(){$('#delBtn').button('reset')});
 				};
@@ -402,7 +404,7 @@
 					} */
 					
 					$('#okBtn').button('loading');
-					$http.post( '/notes/change_note/',reqData)
+					$http.post( '/notes/note/',reqData)
 						.then(successDDL, failureDDL)
 							.then(function(){$('#okBtn').button('reset')});
 					

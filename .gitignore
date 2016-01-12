@@ -9,8 +9,8 @@ test.py
 static/css/bootstrap.css
 static/css/bootstrap-theme.css
 static/js/bootstrap.js
-static/blog/css/fullcalendar.css
-static/blog/js/fullcalendar.js
 static/sysAdmin/css/font-awesome.css
 static/js/angular.js
 static/js/ui-bootstrap-tpls-0.14.3.js
+static/note/js/fullcalendar.js
+static/note/css/fullcalendar.css

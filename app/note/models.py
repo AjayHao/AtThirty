@@ -57,6 +57,7 @@ class Account_Notes(BaseModel):
         ('2', '餐饮'),
         ('3', '水电煤'),
         ('4', '人情'),
+        ('5', '其他'),
     )    
     
     MONEY_DIRECTIONS = (

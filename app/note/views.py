@@ -1,18 +1,28 @@
 # -*- coding: utf-8 -*-
-from app.note.models import *
+import json
+
+from django.core import serializers
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from django.core import serializers
-import json
+from django.views.decorators.csrf import ensure_csrf_cookie
 
-from django.views.decorators.csrf import csrf_exempt
+from app.note.models import *
+
+
 # Create your views here.
-# #@#ensure_csrf_cookie
-@csrf_exempt
+@ensure_csrf_cookie
 
 def notes(req):
     return render_to_response('notes.html')
+
+def note(req, noteid=None):
+    if req.method == 'POST':
+        ret = change_note(req)
+    elif req.method == 'DELETE':
+        ret = delete_note(req, noteid)
+                
+    return HttpResponse(json.dumps(ret), content_type="application/json")  
 
 def get_securities(req):
     qNoteId = req.GET['note_id']
@@ -92,8 +102,6 @@ def change_note(req):
 
     ret = {'retCode':'0', 'retMsg':'修改成功'}
     try:
-        #if req.method == 'POST':
-        #here using post method
         req_json = json.loads(req.body.decode())
         note_id = req_json['note_id']
         note_type = req_json['note_type']
@@ -162,11 +170,9 @@ def change_note(req):
     except Exception as e:
         print(e)
         ret['retMsg'] = e            
-    return HttpResponse(json.dumps(ret), content_type="application/json")
-
+    return ret
 
 def delete_note(req, noteid=None):
-    
     ret = {'retCode':'0', 'retMsg':'删除成功'}
     try:
         note = Notes.objects.get(id=noteid)
@@ -174,4 +180,5 @@ def delete_note(req, noteid=None):
     except Exception as e:
         print(e)
         ret['retMsg'] = e            
-    return HttpResponse(json.dumps(ret), content_type="application/json")            
+    return ret  
+          
