@@ -5,7 +5,6 @@ from app.blog import views as blog_views
 
 urlpatterns = [
     #django url
-    url(r'^$', blog_views.index, name='blog_index'),      
-    url(r'^lab/angularjs/$',blog_views.lab_angularjs),
+    url(r'^$', blog_views.index, name='blog_index'),
     
 ]

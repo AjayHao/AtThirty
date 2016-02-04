@@ -49,6 +49,11 @@
 .form-horizonal select{
 	padding-top : 7px;
 }
+
+.note_detail {
+	max-height: 500px;
+	overflow-y: auto;	
+}
 /* btn */
 /*.btn-outline {
     color: inherit;

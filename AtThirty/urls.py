@@ -24,7 +24,8 @@ urlpatterns = [
     
 #    url(r'^$', adminViews.index, name='index'),   
     url(r'^', include('app.blog.urls')),
-    url(r'^notes/', include('app.note.urls')),    
+    url(r'^notes/', include('app.note.urls')),
+    url(r'^lab/',include('app.lab.urls')),    
     url(r'^blog_admin/', include('app.sysAdmin.urls')),    
     #url(r'^dashboard/', adminViews.index, name='index'),         
     #url(r'^reports/', adminViews.reports, name='reports'),

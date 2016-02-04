@@ -17,7 +17,7 @@ from AtThirty.base import *
 #项目配置
 ###############################################################
 # Global Module Name configuration
-MODULES = ['blog','sysAdmin','note']
+MODULES = ['blog','sysAdmin','note','lab']
 
 INSTALLED_APPS += tuple(["app."+i for i in MODULES])
 #INSTALLED_APPS += ('app.blog','app.sysAdmin',)

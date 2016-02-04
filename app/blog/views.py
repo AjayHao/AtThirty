@@ -7,5 +7,3 @@ from django.shortcuts import render_to_response
 def index(req):
     return render_to_response('blog_index.html')
 
-def lab_angularjs(req):
-    return render_to_response('lab_angularjs.html')

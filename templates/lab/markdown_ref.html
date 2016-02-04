@@ -1,0 +1,140 @@
+{% extends "blog_base.html" %}
+{% block custom_style %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/font-awesome.css' %}" />
+<style>
+#mdtable tr td{
+	text-align : left;
+	vertical-align : middle;
+}
+</style>
+{% endblock %}
+{% block content %}
+{% verbatim %}
+<div class="container" ng-controller="mdController">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<div>
+				<table id="mdtable" class="table table-condensed table-bordered table-hover">
+					<thead>
+						<tr class="success">
+							<th width="33%">Markdown语法 </th>
+							<th width="33%">对应Html</th>
+							<th width="33%">浏览器效果</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><!-- ng-repeat="o in obj.mdrefs track by $index" -->
+	<td>
+		<div>一级标题(Setext格式,只支持到二级)</div>
+		<div>=======</div>
+	</td>
+	<td>
+		<span>&lt;h1&gt;</span>
+			一级标题
+		<span>&lt;/h1&gt;</span>
+	</td>
+	<td>
+		<h1>一级标题</h1>							
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>二级标题</div>
+		<div>-----------</div>
+	</td>
+	<td>
+		<span>&lt;h2&gt;</span>
+			二级标题
+		<span>&lt;/h2&gt;</span>
+	</td>
+	<td>
+		<h2>二级标题</h2>							
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>三级标题(atx格式,最低到六级)</div>
+		<div>###</div>
+	</td>
+	<td>
+		<span>&lt;h3&gt;</span>
+			三级标题
+		<span>&lt;/h3&gt;</span>
+	</td>
+	<td>
+		<h3>三级标题</h3>							
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>换行：行尾留2个<strong>空格</strong>
+	</td>
+	<td>
+		&lt;p&gt;换行：行尾留2个&lt;br /&gt;空格&lt;/p&gt;
+	</td>
+	<td>
+		<p>换行：行尾留2个<br />空格</p>							
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>*斜体*</div>
+	</td>
+	<td>
+		&lt;em&gt;斜体&lt;/em&gt;		
+	</td>
+	<td>
+		<em>斜体</em>						
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>**粗体**</div>
+	</td>
+	<td>
+		&lt;strong&gt;粗体&lt;/strong&gt;		
+	</td>
+	<td>
+		<strong>粗体</strong>						
+	</td>
+</tr>
+<tr>
+	<td>
+		<div>`标注</strong>
+	</td>
+	<td>
+		&lt;code&gt;标注&lt;/code&gt;	
+	</td>
+	<td>
+		<code>标注</code>					
+	</td>
+</tr>							
+					</tbody>
+				</table>
+			</div>
+			<!-- /.table-responsive -->
+		</div>
+		<!-- /col -->
+	</div>
+	<!-- /.row -->		
+</div>
+<!-- /.container -->
+{% endverbatim %} 
+{% endblock %} 
+
+{% block custom_js %}
+<script>
+	angular.module("blogApp",[]).
+						controller("mdController", function($scope) {
+		$scope.obj = new Object();
+		$scope.obj.mdrefs = new Array();
+		
+		$scope.obj.mdrefs.push({"md":"Heading=======",
+								"html":"b",
+								"effect":"c"
+							});
+		
+	});
+</script>
+{% endblock %} 
